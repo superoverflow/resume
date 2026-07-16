@@ -70,6 +70,7 @@ body {
   background-color: var(--bg-page);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   display: flex;
+  flex-direction: row;
   min-height: 1100px;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
@@ -138,6 +139,7 @@ body {
   gap: 8px;
   margin-bottom: 8px;
   font-size: 12px;
+  word-break: break-all; 
 }
 
 .contact-icon {
@@ -244,7 +246,8 @@ body {
 .role-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px; 
+  flex-wrap: wrap; 
   margin-bottom: 4px;
 }
 
@@ -278,6 +281,72 @@ body {
   font-size: 10px;
 }
 
+@media (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+  
+  .page-wrapper {
+    flex-direction: column;
+    margin: 0;
+    box-shadow: none;
+    min-height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 30px 20px;
+  }
+
+  .main-content {
+    width: 100%;
+    padding: 30px 20px;
+  }
+
+  .controls {
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--bg-page);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: 1px solid var(--border-color);
+  }
+}
+
+.pdf-export-mode .page-wrapper {
+  margin: 0 !important;
+  box-shadow: none !important;
+  width: 794px !important; /* A4 width in pixels at 96 DPI */
+  height: 1123px !important; /* A4 height */
+  min-height: auto !important;
+  flex-direction: row !important; /* Force side-by-side even on mobile */
+  background-color: #ffffff !important;
+  color: #333333 !important;
+}
+
+.pdf-export-mode .sidebar { 
+  width: 32% !important;
+  background-color: #f8f9fa !important; 
+  border-right: 1px solid #e2e8f0 !important;
+  border-bottom: none !important;
+}
+
+.pdf-export-mode .main-content {
+  width: 68% !important;
+}
+
+.pdf-export-mode .name { color: #1e293b !important; }
+.pdf-export-mode .title { color: #0ea5e9 !important; }
+.pdf-export-mode .subtitle { color: #0ea5e9 !important; }
+.pdf-export-mode .section-title { color: #0ea5e9 !important; }
+.pdf-export-mode .company-name { color: #1e293b !important; }
+.pdf-export-mode .text-muted { color: #64748b !important; }
+.pdf-export-mode .role-title { color: #1e293b !important; }
+
 @media print {
   body { background-color: white; }
   .controls { display: none; }
@@ -286,5 +355,6 @@ body {
     box-shadow: none; 
     max-width: 100%;
     border: none;
+    flex-direction: row;
   }
 }
