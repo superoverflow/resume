@@ -296,6 +296,9 @@ body {
   font-size: 10px;
 }
 
+/* -----------------------------------------
+   RESPONSIVE DESIGN (MOBILE FRIENDLY)
+----------------------------------------- */
 @media (max-width: 768px) {
   body {
     padding: 0;
@@ -306,19 +309,32 @@ body {
     margin: 0;
     box-shadow: none;
     min-height: auto;
+    background-color: var(--bg-page);
   }
 
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 30px 20px;
+  /* Unwrap columns so sections become direct children of flex container */
+  .sidebar, .main-content {
+    display: contents; 
   }
 
-  .main-content {
-    width: 100%;
-    padding: 30px 20px;
+  .section {
+    padding: 0 25px;
+    margin-bottom: 25px;
   }
+
+  /* Define exact mobile order */
+  .section-header     { order: 1; padding-top: 30px; }
+  .section-profile    { order: 2; }
+  .section-experience { order: 3; }
+  
+  /* Apply the sidebar background color specifically to the bottom sections */
+  .section-education, .section-skills, .section-contact {
+    background-color: var(--bg-sidebar);
+  }
+  
+  .section-education  { order: 4; border-top: 1px solid var(--border-color); padding-top: 30px; margin-bottom: 0; }
+  .section-skills     { order: 5; padding-top: 25px; margin-bottom: 0; }
+  .section-contact    { order: 6; padding-top: 25px; padding-bottom: 30px; margin-bottom: 0; }
 
   .controls {
     top: auto;
@@ -332,15 +348,24 @@ body {
   }
 }
 
+/* -----------------------------------------
+   PDF EXPORT OVERRIDES (FORCES DESKTOP)
+----------------------------------------- */
 .pdf-export-mode .page-wrapper {
   margin: 0 !important;
   box-shadow: none !important;
-  width: 794px !important; /* A4 width in pixels at 96 DPI */
-  height: 1123px !important; /* A4 height */
+  width: 794px !important;
+  height: 1123px !important;
   min-height: auto !important;
-  flex-direction: row !important; /* Force side-by-side even on mobile */
+  flex-direction: row !important;
   background-color: #ffffff !important;
   color: #333333 !important;
+}
+
+/* Force standard display ignoring mobile "display: contents" */
+.pdf-export-mode .sidebar,
+.pdf-export-mode .main-content {
+  display: block !important;
 }
 
 .pdf-export-mode .sidebar { 
@@ -348,12 +373,28 @@ body {
   background-color: #f8f9fa !important; 
   border-right: 1px solid #e2e8f0 !important;
   border-bottom: none !important;
+  padding: 40px 25px !important;
 }
 
 .pdf-export-mode .main-content {
   width: 68% !important;
+  padding: 40px 35px !important;
 }
 
+/* Strip mobile overrides out of the PDF */
+.pdf-export-mode .section {
+  padding: 0 !important;
+  background-color: transparent !important;
+}
+.pdf-export-mode .section-header {
+  padding-top: 0 !important;
+}
+.pdf-export-mode .section-education {
+  border-top: none !important;
+  padding-top: 0 !important;
+}
+
+/* PDF text colors */
 .pdf-export-mode .name { color: #1e293b !important; }
 .pdf-export-mode .title { color: #0ea5e9 !important; }
 .pdf-export-mode .subtitle { color: #0ea5e9 !important; }
@@ -361,6 +402,7 @@ body {
 .pdf-export-mode .company-name { color: #1e293b !important; }
 .pdf-export-mode .text-muted { color: #64748b !important; }
 .pdf-export-mode .role-title { color: #1e293b !important; }
+.pdf-export-mode .contact-item a { color: inherit !important; text-decoration: none !important; }
 
 @media print {
   body { background-color: white; }

@@ -31,32 +31,54 @@ export default function CV({ data }) {
   const downloadPDF = async () => {
     if (!cvRef.current || isGenerating) return;
     setIsGenerating(true);
-
+    
     try {
-      // Temporarily add class to force light mode styles for PDF
       const wrapper = cvRef.current;
-      wrapper.classList.add('pdf-export-mode');
+      
+      // 1. Save scroll position and scroll to top
+      const originalScrollY = window.scrollY;
+      window.scrollTo(0, 0);
 
+      // 2. Temporarily remove dark mode from the document
+      const wasDark = document.documentElement.classList.contains('dark');
+      if (wasDark) {
+        document.documentElement.classList.remove('dark');
+      }
+      
+      // 3. Force desktop layout for PDF
+      wrapper.classList.add('pdf-export-mode');
+      
+      // 4. Wait for browser to repaint (so the light mode fully applies)
+      await new Promise(resolve => setTimeout(resolve, 150));
+      
+      // 5. Capture canvas
       const canvas = await html2canvas(wrapper, {
-        scale: 2, // Higher scale for better resolution
+        scale: 2, 
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        windowWidth: 794 // Force A4 width evaluation
       });
-
+      
+      // 6. Restore screen layout immediately
       wrapper.classList.remove('pdf-export-mode');
-
-      const imgData = canvas.toDataURL('image/png');
+      if (wasDark) {
+        document.documentElement.classList.add('dark'); // Restore dark mode
+      }
+      window.scrollTo(0, originalScrollY);
+      
+      // 7. Compress to JPEG and export
+      const imgData = canvas.toDataURL('image/jpeg', 0.8);
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
-
+      
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
       pdf.save('Cyrus_Tang_CV.pdf');
     } catch (error) {
       console.error('Error generating PDF', error);
@@ -64,7 +86,6 @@ export default function CV({ data }) {
       setIsGenerating(false);
     }
   };
-
   return (
     <>
       <div className="controls">
@@ -81,11 +102,13 @@ export default function CV({ data }) {
       <div className="page-wrapper" ref={cvRef}>
         {/* Sidebar */}
         <div className="sidebar">
-          <div className="section" style={{ marginBottom: '35px' }}>
+          <div className="section section-header">
             <h1 className="name">{profile.name}</h1>
             <div className="title">{profile.title}</div>
-            <div className="subtitle">{profile.subtitle}</div>
+            <div className="subtitle" style={{ marginBottom: 0 }}>{profile.subtitle}</div>
+          </div>
 
+          <div className="section section-contact">
             <ul className="contact-list">
               <li className="contact-item">
                 <Mail className="contact-icon" /> <a href={`mailto:${profile.email}`}>{profile.email}</a>
@@ -102,41 +125,39 @@ export default function CV({ data }) {
             </ul>
           </div>
 
-          <div className="section">
+          <div className="section section-skills">
             <h2 className="section-title">SKILLS</h2>
             <ul className="skills-list">
               {skills.map((skill, i) => <li key={i}>{skill}</li>)}
             </ul>
           </div>
 
-          <div className="section">
+          <div className="section section-education">
             <h2 className="section-title">EDUCATION</h2>
-
-            {/* Handle multi-line institution names based on the PDF format */}
+            
             <div className="edu-uni">
               Hong Kong University<br/>of Science and Technology
             </div>
-
+            
             <div className="edu-date">{education.period}</div>
-
+            
             {education.degrees.map((degree, i) => (
               <div key={i} className="edu-degree">{degree}</div>
             ))}
-
+            
             <div className="edu-awards">Awards: {education.awards}</div>
           </div>
         </div>
 
         {/* Main Content */}
         <div className="main-content">
-          <div className="section">
+          <div className="section section-profile">
             <h2 className="section-title">PROFILE</h2>
             <div className="summary-text">{profile.summary}</div>
           </div>
 
-          <div className="section">
+          <div className="section section-experience">
             <h2 className="section-title">EXPERIENCE</h2>
-
             {experience.map((companyGroup, idx) => (
               <div key={idx} className="job-group">
                 <div className="job-logo-col">
