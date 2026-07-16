@@ -88,16 +88,16 @@ export default function CV({ data }) {
 
             <ul className="contact-list">
               <li className="contact-item">
-                <Mail className="contact-icon" /> {profile.email}
+                <Mail className="contact-icon" /> <a href={`mailto:${profile.email}`}>{profile.email}</a>
               </li>
               <li className="contact-item">
-                <Phone className="contact-icon" /> {profile.phone}
+                <Phone className="contact-icon" /> <a href={`tel:${profile.phone.replace('(0)', '').replace(/[^0-9+]/g, '')}`}>{profile.phone}</a>
               </li>
               <li className="contact-item">
-                <Linkedin className="contact-icon" /> {profile.linkedin}
+                <Linkedin className="contact-icon" /> <a href={`https://${profile.linkedin}`} target="_blank" rel="noopener noreferrer">{profile.linkedin}</a>
               </li>
               <li className="contact-item">
-                <Globe className="contact-icon" /> {profile.website}
+                <Globe className="contact-icon" /> <a href={`https://${profile.website}`} target="_blank" rel="noopener noreferrer">{profile.website}</a>
               </li>
             </ul>
           </div>

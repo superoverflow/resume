@@ -142,6 +142,21 @@ body {
   word-break: break-all; 
 }
 
+.contact-item a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-item a:hover {
+  color: var(--text-accent);
+}
+
+.pdf-export-mode .contact-item a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
 .contact-icon {
   color: var(--text-accent);
   width: 14px;
