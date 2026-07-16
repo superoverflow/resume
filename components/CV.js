@@ -28,64 +28,24 @@ export default function CV({ data }) {
 
   const toggleTheme = () => setIsDark(!isDark);
 
-  const downloadPDF = async () => {
-    if (!cvRef.current || isGenerating) return;
-    setIsGenerating(true);
-    
-    try {
-      const wrapper = cvRef.current;
-      
-      // 1. Save scroll position and scroll to top
-      const originalScrollY = window.scrollY;
-      window.scrollTo(0, 0);
-
-      // 2. Temporarily remove dark mode from the document
-      const wasDark = document.documentElement.classList.contains('dark');
-      if (wasDark) {
-        document.documentElement.classList.remove('dark');
-      }
-      
-      // 3. Force desktop layout for PDF
-      wrapper.classList.add('pdf-export-mode');
-      
-      // 4. Wait for browser to repaint (so the light mode fully applies)
-      await new Promise(resolve => setTimeout(resolve, 150));
-      
-      // 5. Capture canvas
-      const canvas = await html2canvas(wrapper, {
-        scale: 2, 
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        windowWidth: 794 // Force A4 width evaluation
-      });
-      
-      // 6. Restore screen layout immediately
-      wrapper.classList.remove('pdf-export-mode');
-      if (wasDark) {
-        document.documentElement.classList.add('dark'); // Restore dark mode
-      }
-      window.scrollTo(0, originalScrollY);
-      
-      // 7. Compress to JPEG and export
-      const imgData = canvas.toDataURL('image/jpeg', 0.8);
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-      pdf.save('Cyrus_Tang_CV.pdf');
-    } catch (error) {
-      console.error('Error generating PDF', error);
-    } finally {
-      setIsGenerating(false);
+  const downloadPDF = () => {
+    // 1. Temporarily disable dark mode so the print is light-themed
+    const wasDark = document.documentElement.classList.contains('dark');
+    if (wasDark) {
+      document.documentElement.classList.remove('dark');
     }
+
+    // 2. Wait a split second for styles to apply, then trigger print
+    setTimeout(() => {
+      window.print();
+      
+      // 3. Restore dark mode after the print dialog closes
+      if (wasDark) {
+        document.documentElement.classList.add('dark');
+      }
+    }, 150);
   };
+
   return (
     <>
       <div className="controls">

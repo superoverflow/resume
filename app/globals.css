@@ -404,14 +404,63 @@ body {
 .pdf-export-mode .role-title { color: #1e293b !important; }
 .pdf-export-mode .contact-item a { color: inherit !important; text-decoration: none !important; }
 
+/* -----------------------------------------
+   NATIVE ATS-FRIENDLY PDF EXPORT (PRINT)
+----------------------------------------- */
 @media print {
-  body { background-color: white; }
-  .controls { display: none; }
-  .page-wrapper { 
-    margin: 0; 
-    box-shadow: none; 
-    max-width: 100%;
-    border: none;
-    flex-direction: row;
+  /* Force A4 size and remove browser headers/footers */
+  @page {
+    margin: 0;
+    size: A4 portrait;
   }
+
+  body { 
+    background-color: white !important; 
+    -webkit-print-color-adjust: exact !important; /* Forces background colors to render */
+    print-color-adjust: exact !important;
+  }
+  
+  .controls { display: none !important; }
+  
+  .page-wrapper { 
+    margin: 0 !important; 
+    box-shadow: none !important; 
+    max-width: 100% !important;
+    width: 100% !important;
+    border: none !important;
+    flex-direction: row !important; /* Force side-by-side layout */
+    background-color: white !important;
+  }
+
+  /* Force standard block display (overrides mobile display: contents) */
+  .sidebar, .main-content {
+    display: block !important;
+  }
+
+  .sidebar { 
+    width: 32% !important; 
+    background-color: #f8f9fa !important; 
+    border-right: 1px solid #e2e8f0 !important;
+    border-bottom: none !important;
+    padding: 40px 25px !important;
+    height: 100vh; /* Make sidebar stretch full page */
+  }
+
+  .main-content { 
+    width: 68% !important; 
+    padding: 40px 35px !important;
+  }
+
+  /* Reset mobile padding/order overrides */
+  .section { padding: 0 !important; }
+  .section-header { padding-top: 0 !important; }
+  .section-education { border-top: none !important; padding-top: 0 !important; background-color: transparent !important; }
+  .section-skills, .section-contact { background-color: transparent !important; }
+
+  /* Ensure text colors remain dark */
+  .name { color: #1e293b !important; }
+  .title, .subtitle, .section-title { color: #0ea5e9 !important; }
+  .company-name, .role-title { color: #1e293b !important; }
+  .text-muted { color: #64748b !important; }
+  .contact-item a { color: #333333 !important; text-decoration: none !important; }
 }
