@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { Mail, Phone, Linkedin, Globe, Download, Moon, Sun } from 'lucide-react';
+import { Mail, Phone, Linkedin, Globe, Download, Moon, Sun, Github, Menu, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
@@ -10,6 +10,7 @@ export default function CV({ data }) {
   const cvRef = useRef(null);
   const [isDark, setIsDark] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [controlsOpen, setControlsOpen] = useState(false);
 
   useEffect(() => {
     // Check system preference on load
@@ -48,14 +49,29 @@ export default function CV({ data }) {
 
   return (
     <>
-      <div className="controls">
-        <button onClick={toggleTheme} className="btn" aria-label="Toggle theme">
-          {isDark ? <Sun size={16} /> : <Moon size={16} />}
-          {isDark ? 'Light' : 'Dark'}
-        </button>
-        <button onClick={downloadPDF} className="btn" disabled={isGenerating}>
-          <Download size={16} />
-          {isGenerating ? 'Generating...' : 'Download PDF'}
+      <div className={`controls ${controlsOpen ? 'controls-open' : ''}`}>
+        <div className="controls-actions">
+          <button onClick={toggleTheme} className="btn" aria-label="Toggle theme">
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+            {isDark ? 'Light mode' : 'Dark mode'}
+          </button>
+          <button onClick={downloadPDF} className="btn" disabled={isGenerating}>
+            <Download size={16} />
+            {isGenerating ? 'Opening print…' : 'Download PDF'}
+          </button>
+          <a className="btn repo-link" href="https://github.com/superoverflow/resume" target="_blank" rel="noopener noreferrer">
+            <Github size={16} />
+            Source code
+          </a>
+        </div>
+        <button
+          type="button"
+          className="controls-toggle"
+          onClick={() => setControlsOpen((open) => !open)}
+          aria-expanded={controlsOpen}
+          aria-label={controlsOpen ? 'Close controls' : 'Open controls'}
+        >
+          {controlsOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 

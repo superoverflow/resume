@@ -44,6 +44,19 @@ body {
   z-index: 100;
 }
 
+.controls-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.controls-toggle {
+  display: none;
+}
+
+.repo-link {
+  text-decoration: none;
+}
+
 .btn {
   background-color: var(--bg-page);
   color: var(--text-heading);
@@ -463,4 +476,64 @@ body {
   .company-name, .role-title { color: #1e293b !important; }
   .text-muted { color: #64748b !important; }
   .contact-item a { color: #333333 !important; text-decoration: none !important; }
+}
+
+/* Compact floating actions on mobile to avoid covering CV content. */
+@media (max-width: 768px) {
+  .controls {
+    top: auto;
+    right: 16px;
+    bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .controls-actions {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    width: max-content;
+    padding: 8px;
+    background-color: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .controls.controls-open .controls-actions {
+    display: flex;
+  }
+
+  .controls-toggle {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-heading);
+    background-color: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+  }
+
+  .controls-actions .btn {
+    justify-content: flex-start;
+    min-height: 40px;
+  }
+}
+
+@media print {
+  .controls,
+  .controls-actions,
+  .controls-toggle {
+    display: none !important;
+  }
 }
